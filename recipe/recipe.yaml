@@ -49,12 +49,12 @@ requirements:
 
 tests:
   - script: |
-      cd Raster3D/examples
+      cd examples
       R3D_LIB=../materials render -gamma 1.1 -png example1.png < example1.r3d
     files:
       source:
-        - Raster3D/examples/
-        - Raster3D/materials/
+        - examples/
+        - materials/
 
 about:
   homepage: "http://www.bmsc.washington.edu/raster3d"
