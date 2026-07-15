@@ -6,18 +6,15 @@ package:
   name: raster3d
   version: ${{ sem_ver }}
 source:
-  url: http://www.bmsc.washington.edu/raster3d/Raster3D_${{ orig_ver }}.tar.gz
-  sha256: 4f6999f8d446ed2d7ef32d4f7abaa1d63fa1fa78686e79cecafc06c5ae6b122d
-  file_name: Raster3D_${{ orig_ver }}.tar
+  url: http://skuld.bmsc.washington.edu/raster3d/Raster3D_${{ orig_ver }}.tar.gz  
+  sha256: 8aecd2a6a7f7c0ab9100f6e3affa865f24c55617b76f16a28c401e4dbc6563a4
 
 build:
-  number: 1
+  number: 2
   skip: win
   script: |
     set -exo pipefail
 
-    tar xf Raster3D_${{ orig_ver }}.tar
-    cd Raster3D
     sed -i \
       -e 's|^prefix[[:space:]]*=[[:space:]]*/usr/local|prefix = '"${PREFIX}"'|' \
       -e 's|^INCDIRS[[:space:]]*=.*|INCDIRS  = -I'"${PREFIX}/include"'|' \
