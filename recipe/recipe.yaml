@@ -49,12 +49,12 @@ requirements:
 
 tests:
   - script: |
-      cd Raster3D/examples
+      cd examples
       R3D_LIB=../materials render -gamma 1.1 -png example1.png < example1.r3d
     files:
       source:
-        - Raster3D/examples/
-        - Raster3D/materials/
+        - examples/
+        - materials/
 
 about:
   homepage: "http://www.bmsc.washington.edu/raster3d"
@@ -67,7 +67,7 @@ about:
     Raster3D can also be used to render pictures composed in other programs such as [Molscript](http://www.bmsc.washington.edu/raster3d/#pointers) in glorious 3D with highlights, shadowing, etc.
     Output is to pixel image files with 24 bits of color information per pixel.
   license: Artistic-2.0
-  license_file: Raster3D/Artistic_License_V2
+  license_file: Artistic_License_V2
   documentation: http://www.bmsc.washington.edu/raster3d/html/raster3d.html
 
 extra:
