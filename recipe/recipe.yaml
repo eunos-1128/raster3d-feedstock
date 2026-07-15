@@ -6,51 +6,45 @@ package:
   name: raster3d
   version: ${{ sem_ver }}
 source:
-  url: http://skuld.bmsc.washington.edu/raster3d/Raster3D_${{ orig_ver }}.tar.gz  
+  url: http://www.bmsc.washington.edu/raster3d/Raster3D_${{ orig_ver }}.tar.gz
   sha256: 8aecd2a6a7f7c0ab9100f6e3affa865f24c55617b76f16a28c401e4dbc6563a4
 
 build:
   number: 2
-  skip: win
-  script: |
-    set -exo pipefail
-
-    sed -i \
-      -e 's|^prefix[[:space:]]*=[[:space:]]*/usr/local|prefix = '"${PREFIX}"'|' \
-      -e 's|^INCDIRS[[:space:]]*=.*|INCDIRS  = -I'"${PREFIX}/include"'|' \
-      -e 's|^LIBDIRS[[:space:]]*=.*|LIBDIRS  = -L'"${PREFIX}/lib"'|' \
-      Makefile.template
-
-    make linux
-
-    sed -i \
-      -e 's|OS = linux|OS = '$(uname | tr 'A-Z' 'a-z')'|g' \
-      -e 's|CC = gcc|CC = '"${CC}"'|g' \
-      -e 's|FC = gfortran|FC = '"${FC}"'|g' \
-      Makefile.incl
-
-    make all -j${CPU_COUNT}
-    make install
 
 requirements:
   build:
-    - ${{ compiler("c") }}
-    - ${{ compiler("fortran") }}
-    - ${{ stdlib("c") }}
+    - ${{ compiler("m2w64_c") if win else compiler("c") }}
+    - ${{ compiler("m2w64_fortran") if win else compiler("fortran") }}
+    - ${{ stdlib("m2w64_c") if win else stdlib("c") }}
+    - ${{ "sed" if osx }}
+    - ${{ "m2-base" if win }}
     - make
-    - if: osx
-      then: sed
   host:
     - libgd
     - libjpeg-turbo
     - libpng
     - libtiff
-  run_exports: []  # No shared libraries to worry about
+  run_exports: []  # No shared libraries
 
 tests:
-  - script: |
-      cd examples
-      R3D_LIB=../materials render -gamma 1.1 -png example1.png < example1.r3d
+  - script:
+      - cd examples
+      - if: unix
+        then: |
+          R3D_LIB=../materials render -gamma 1.1 -png example1.png < example1.r3d
+          test -s example1.png
+          R3D_LIB=../materials render -gamma 1.1 -tiff example1.tiff < example1.r3d
+          test -s example1.tiff
+      - if: win
+        then: |
+          set "R3D_LIB=../materials"
+          render -gamma 1.1 -png example1.png < example1.r3d
+          if not exist example1.png exit /b 1
+          for %%F in (example1.png) do if %%~zF EQU 0 exit /b 1
+          render -gamma 1.1 -tiff example1.tiff < example1.r3d
+          if not exist example1.tiff exit /b 1
+          for %%F in (example1.tiff) do if %%~zF EQU 0 exit /b 1
     files:
       source:
         - examples/
