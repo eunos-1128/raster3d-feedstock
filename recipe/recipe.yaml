@@ -28,6 +28,10 @@ requirements:
     - ${{ "m2-base" if win }}
     - make
   host:
+    # The sysroot run export is solved separately for the host environment,
+    # so pin the working runtime build here as well.
+    - if: win
+      then: libwinpthread ==12.0.0.r4.gg4f2fc60ca h57928b3_10
     - libgd
     - libjpeg-turbo
     - libpng
