@@ -48,6 +48,17 @@ requirements:
     - libjpeg-turbo
     - libpng
     - libtiff
+  run:
+    # Keep the packaged Windows executables on the known-working runtime
+    # builds until the broken MinGW packages are removed from repodata.
+    - if: win
+      then:
+        - libwinpthread ==12.0.0.r4.gg4f2fc60ca h57928b3_10
+        - libgcc ==16.1.0 h110b43a_1
+        - libgfortran ==16.1.0 h719f0c7_1
+        - libgfortran5 ==16.1.0 h94075d5_1
+        - libgomp ==16.1.0 h8ee18e1_1
+        - libstdcxx ==16.1.0 hae5796f_1
   run_exports: []  # No shared libraries
 
 tests:
